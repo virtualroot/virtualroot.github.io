@@ -1,0 +1,3 @@
+baseURL = 'https://virtualroot.dev/'
+languageCode = 'en-us'
+title = 'virtualroot'
