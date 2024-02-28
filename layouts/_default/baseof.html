@@ -1,12 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>virtualroot</title>
     <meta charset="utf-8">
-    <meta name="description" content="virtualroot">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/normalize/7.0.0/normalize.css">
-    <link href="https://cdn.jsdelivr.net/font-hack/2.020/css/hack.min.css" rel="stylesheet" type="text/css">
+
+    <title>virtualroot</title>
+    <meta name="description" content="virtualroot">
+
+    {{- with resources.Get "js/404.js" }}
+      {{- if eq hugo.Environment "development" }}
+        {{- with . | js.Build }}
+          <script src="{{ .Permalink }}" defer></script>
+        {{- end }}
+      {{- else }}
+        {{- $opts := dict "minify" true }}
+        {{- with . | js.Build $opts | fingerprint }}
+          <script src="{{ .Permalink }}" integrity="{{- .Data.Integrity }}" crossorigin="anonymous" defer></script>
+        {{- end }}
+      {{- end }}
+    {{- end }}
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/normalize/7.0.0/normalize.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/font-hack/2.020/css/hack.min.css" >
     <style type="text/css">
       html, body {
         margin: 0;
@@ -26,6 +41,10 @@
         display: table-cell;
         text-align: center;
         vertical-align: middle;
+      }
+
+      .haiku {
+        font-style: italic;
       }
 
       .center-beard {
